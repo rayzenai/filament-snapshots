@@ -1,0 +1,1 @@
+@livewire('filament-snapshots::content-snapshots-modal', ['record' => $record])
