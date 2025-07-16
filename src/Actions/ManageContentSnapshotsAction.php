@@ -10,7 +10,7 @@ use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 use Illuminate\Database\Eloquent\Model;
 
 class ManageContentSnapshotsAction
@@ -21,7 +21,7 @@ class ManageContentSnapshotsAction
             ->label('Snapshots')
             ->icon('heroicon-o-camera')
             ->modalHeading('Content Snapshots')
-            ->modalWidth(MaxWidth::SevenExtraLarge)
+            ->modalWidth(Width::SevenExtraLarge)
             ->modalContent(function (Model $record) {
                 return view('filament-snapshots::livewire-wrapper', [
                     'record' => $record,
@@ -71,7 +71,7 @@ class ManageContentSnapshotsAction
             ->label('View Snapshots')
             ->icon('heroicon-o-eye')
             ->modalHeading('Content Snapshots')
-            ->modalWidth(MaxWidth::FourExtraLarge)
+            ->modalWidth(Width::FourExtraLarge)
             ->modalContent(function (Model $record) {
                 $snapshots = $record->getSnapshots(20);
                 
@@ -91,7 +91,7 @@ class ManageContentSnapshotsAction
             ->icon('heroicon-o-arrow-path')
             ->color('warning')
             ->modalHeading('Restore Content Snapshot')
-            ->modalWidth(MaxWidth::SevenExtraLarge)
+            ->modalWidth(Width::SevenExtraLarge)
             ->modalContent(function (ContentSnapshot $snapshot) {
                 return view('filament-snapshots::snapshot-diff', [
                     'snapshot' => $snapshot,
