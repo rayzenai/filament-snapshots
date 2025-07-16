@@ -13,12 +13,12 @@ class ContentSnapshot extends Model
         'snapshotable_type',
         'snapshotable_id',
         'heading',
-        'html',
-        'css',
+        'field_data',
         'metadata',
     ];
 
     protected $casts = [
+        'field_data' => 'array',
         'metadata' => 'array',
     ];
 
@@ -36,13 +36,21 @@ class ContentSnapshot extends Model
 
     public function restore(): void
     {
-        $htmlColumn = config('filament-snapshots.content_columns.html', 'html');
-        $cssColumn = config('filament-snapshots.content_columns.css', 'css');
+        $updateData = [];
         
-        $this->snapshotable->update([
-            $htmlColumn => $this->html,
-            $cssColumn => $this->css,
-        ]);
+        if (!empty($this->field_data)) {
+            $fieldMapping = $this->getFieldMapping();
+            
+            foreach ($this->field_data as $fieldKey => $fieldValue) {
+                if (isset($fieldMapping[$fieldKey])) {
+                    $updateData[$fieldMapping[$fieldKey]] = $fieldValue;
+                }
+            }
+            
+            if (!empty($updateData)) {
+                $this->snapshotable->update($updateData);
+            }
+        }
     }
 
     public function scopeForModel($query, string $modelType, int $modelId)
@@ -54,5 +62,74 @@ class ContentSnapshot extends Model
     public function scopeRecent($query, int $limit = 10)
     {
         return $query->latest()->limit($limit);
+    }
+
+    /**
+     * Get field mapping for the snapshotable model
+     */
+    protected function getFieldMapping(): array
+    {
+        $modelClass = $this->snapshotable_type;
+        $modelConfig = config("filament-snapshots.models.{$modelClass}.fields", []);
+        
+        // If no specific model config, use global field mapping
+        if (empty($modelConfig)) {
+            $modelConfig = config('filament-snapshots.default_fields', [
+                'html' => 'html',
+                'css' => 'css',
+            ]);
+        }
+        
+        return $modelConfig;
+    }
+
+    /**
+     * Get field data value by key
+     */
+    public function getFieldValue(string $key): mixed
+    {
+        return $this->field_data[$key] ?? null;
+    }
+
+    /**
+     * Set field data value by key
+     */
+    public function setFieldValue(string $key, mixed $value): void
+    {
+        $fieldData = $this->field_data ?? [];
+        $fieldData[$key] = $value;
+        $this->field_data = $fieldData;
+    }
+
+    /**
+     * Get all field keys that have data
+     */
+    public function getFieldKeys(): array
+    {
+        return array_keys($this->field_data ?? []);
+    }
+
+    /**
+     * Check if field has data
+     */
+    public function hasFieldData(string $key): bool
+    {
+        return isset($this->field_data[$key]) && !empty($this->field_data[$key]);
+    }
+
+    /**
+     * Get HTML data from field_data (for convenience)
+     */
+    public function getHtmlAttribute(): ?string
+    {
+        return $this->field_data['html'] ?? null;
+    }
+
+    /**
+     * Get CSS data from field_data (for convenience)
+     */
+    public function getCssAttribute(): ?string
+    {
+        return $this->field_data['css'] ?? null;
     }
 }

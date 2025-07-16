@@ -12,8 +12,8 @@ class SnapshotService
 {
     public function createSnapshot(Model $model, string $heading, array $metadata = []): ContentSnapshot
     {
-        $htmlColumn = config('filament-snapshots.content_columns.html', 'html');
-        $cssColumn = config('filament-snapshots.content_columns.css', 'css');
+        $fieldMapping = $this->getFieldMapping($model);
+        $fieldData = $this->captureFieldData($model, $fieldMapping);
         
         // Add default metadata
         if (config('filament-snapshots.metadata.track_user', true)) {
@@ -32,8 +32,7 @@ class SnapshotService
             'snapshotable_type' => get_class($model),
             'snapshotable_id' => $model->id,
             'heading' => $heading,
-            'html' => $model->{$htmlColumn},
-            'css' => $model->{$cssColumn},
+            'field_data' => $fieldData,
             'metadata' => $metadata,
         ]);
         
@@ -73,10 +72,11 @@ class SnapshotService
             return null;
         }
         
-        $htmlColumn = config('filament-snapshots.content_columns.html', 'html');
-        $cssColumn = config('filament-snapshots.content_columns.css', 'css');
+        $fieldMapping = $this->getFieldMapping($model);
+        $fieldData = $this->captureFieldData($model, $fieldMapping);
         
-        if (empty($model->{$htmlColumn}) && empty($model->{$cssColumn})) {
+        // Don't create snapshot if no fields have data
+        if (empty($fieldData) || $this->areAllFieldsEmpty($fieldData)) {
             return null;
         }
 
@@ -123,5 +123,67 @@ class SnapshotService
                 ->limit($snapshotsToDelete)
                 ->delete();
         }
+    }
+
+    /**
+     * Get field mapping for a model
+     */
+    private function getFieldMapping(Model $model): array
+    {
+        $modelClass = get_class($model);
+        $modelConfig = config("filament-snapshots.models.{$modelClass}.fields", []);
+        
+        // If no specific model config, use global field mapping
+        if (empty($modelConfig)) {
+            $modelConfig = config('filament-snapshots.default_fields', [
+                'html' => 'html',
+                'css' => 'css',
+            ]);
+        }
+        
+        return $modelConfig;
+    }
+
+    /**
+     * Capture field data from model based on field mapping
+     */
+    private function captureFieldData(Model $model, array $fieldMapping): array
+    {
+        $fieldData = [];
+        
+        foreach ($fieldMapping as $fieldKey => $modelAttribute) {
+            $value = $model->{$modelAttribute} ?? null;
+            
+            if ($value !== null && $value !== '') {
+                $fieldData[$fieldKey] = $value;
+            }
+        }
+        
+        return $fieldData;
+    }
+
+    /**
+     * Check if all fields are empty
+     */
+    private function areAllFieldsEmpty(array $fieldData): bool
+    {
+        foreach ($fieldData as $value) {
+            if (!empty($value)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
+    /**
+     * Check if model has changes in tracked fields
+     */
+    public function hasTrackedFieldChanges(Model $model): bool
+    {
+        $fieldMapping = $this->getFieldMapping($model);
+        $trackedAttributes = array_values($fieldMapping);
+        
+        return $model->isDirty($trackedAttributes);
     }
 }

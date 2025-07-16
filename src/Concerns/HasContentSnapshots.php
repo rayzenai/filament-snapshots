@@ -18,11 +18,11 @@ trait HasContentSnapshots
                 return;
             }
             
-            $htmlColumn = config('filament-snapshots.content_columns.html', 'html');
-            $cssColumn = config('filament-snapshots.content_columns.css', 'css');
+            $snapshotService = app(SnapshotService::class);
             
-            if ($model->isDirty([$htmlColumn, $cssColumn])) {
-                app(SnapshotService::class)->autoSnapshot($model, 'before_update');
+            // Check if any tracked fields have changed
+            if ($snapshotService->hasTrackedFieldChanges($model)) {
+                $snapshotService->autoSnapshot($model, 'before_update');
             }
         });
 

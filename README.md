@@ -1,16 +1,19 @@
 # Filament Snapshots
 
-A Laravel package that provides content snapshots with restore functionality for Filament applications. This package allows you to create, manage, and restore content snapshots for models with HTML and CSS content.
+A Laravel package that provides content snapshots with restore functionality for Filament applications. This package allows you to create, manage, and restore content snapshots for any model fields - not just HTML and CSS, but any content you want to track.
 
 ## Features
 
 - 📸 **Automatic snapshots** - Automatically create snapshots before content updates/deletions
 - 🔧 **Manual snapshots** - Create snapshots with custom descriptions
 - 🔄 **Easy restore** - Restore content from any snapshot with diff preview
+- 🎯 **Configurable fields** - Track any model fields, not just HTML/CSS
 - 🎨 **Filament integration** - Beautiful UI components for Filament admin panels
 - ⚡ **Livewire powered** - Real-time updates and interactions
 - 🗂️ **Polymorphic** - Works with any Eloquent model
 - 🧹 **Auto-cleanup** - Automatically clean up old snapshots
+- 📊 **JSON storage** - Efficient field storage with PostgreSQL JSONB support
+- 🔍 **Advanced diffs** - Multi-field comparison with tabbed interface
 
 ## Installation
 
@@ -37,7 +40,7 @@ php artisan vendor:publish --tag="filament-snapshots-config"
 
 ### 1. Add the Trait to Your Model
 
-Add the `HasContentSnapshots` trait to any model that has HTML/CSS content:
+Add the `HasContentSnapshots` trait to any model that has content you want to track:
 
 ```php
 use Rayzenai\FilamentSnapshots\Concerns\HasContentSnapshots;
@@ -71,13 +74,46 @@ class PageResource extends Resource
 }
 ```
 
-### 3. Using Snapshots
+### 3. Configure Fields to Track
+
+By default, the package tracks `html` and `css` fields. You can customize which fields to track per model:
+
+```php
+// In config/filament-snapshots.php
+return [
+    'models' => [
+        'App\\Models\\Page' => [
+            'fields' => [
+                'content' => 'content',           // field_key => model_attribute
+                'meta_description' => 'meta_description',
+                'title' => 'title',
+            ],
+        ],
+        
+        'App\\Models\\BlogPost' => [
+            'fields' => [
+                'body' => 'body',
+                'excerpt' => 'excerpt',
+                'title' => 'title',
+            ],
+        ],
+    ],
+    
+    // Default fields for models without specific configuration
+    'default_fields' => [
+        'html' => 'html',
+        'css' => 'css',
+    ],
+];
+```
+
+### 4. Using Snapshots
 
 #### Automatic Snapshots
 
 Snapshots are automatically created:
 
-- Before updating content (when `html` or `css` fields change)
+- Before updating content (when any tracked fields change)
 - Before deleting a model
 
 #### Manual Snapshots

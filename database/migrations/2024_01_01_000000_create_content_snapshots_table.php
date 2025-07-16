@@ -15,8 +15,7 @@ return new class extends Migration
             $table->string('snapshotable_type');
             $table->unsignedBigInteger('snapshotable_id');
             $table->string('heading');
-            $table->longText('html')->nullable();
-            $table->longText('css')->nullable();
+            $table->json('field_data')->nullable();
             $table->json('metadata')->nullable();
             $table->timestamps();
 

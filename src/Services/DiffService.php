@@ -165,4 +165,145 @@ class DiffService
         
         return $html;
     }
+
+    /**
+     * Generate diff for multiple fields
+     */
+    public function generateFieldsDiff(array $originalFields, array $newFields): array
+    {
+        $fieldDiffs = [];
+        $allFields = array_unique(array_merge(array_keys($originalFields), array_keys($newFields)));
+        
+        foreach ($allFields as $fieldKey) {
+            $originalValue = $originalFields[$fieldKey] ?? '';
+            $newValue = $newFields[$fieldKey] ?? '';
+            
+            $fieldDiff = $this->getInlineDiff($originalValue, $newValue);
+            
+            if ($fieldDiff['hasChanges']) {
+                $fieldDiffs[$fieldKey] = $fieldDiff;
+            }
+        }
+        
+        return $fieldDiffs;
+    }
+
+    /**
+     * Check if snapshot differs from current model state
+     */
+    public function snapshotDiffersFromModel($snapshot, $model): bool
+    {
+        if (!empty($snapshot->field_data)) {
+            $fieldMapping = $this->getFieldMapping($model);
+            
+            foreach ($snapshot->field_data as $fieldKey => $snapshotValue) {
+                if (isset($fieldMapping[$fieldKey])) {
+                    $modelAttribute = $fieldMapping[$fieldKey];
+                    $modelValue = $model->{$modelAttribute} ?? '';
+                    
+                    if ($snapshotValue !== $modelValue) {
+                        return true;
+                    }
+                }
+            }
+        }
+        
+        return false;
+    }
+
+    /**
+     * Get field mapping for model (duplicated from SnapshotService to avoid circular dependency)
+     */
+    private function getFieldMapping($model): array
+    {
+        $modelClass = get_class($model);
+        $modelConfig = config("filament-snapshots.models.{$modelClass}.fields", []);
+        
+        // If no specific model config, use global field mapping
+        if (empty($modelConfig)) {
+            $modelConfig = config('filament-snapshots.default_fields', [
+                'html' => 'html',
+                'css' => 'css',
+            ]);
+        }
+        
+        return $modelConfig;
+    }
+
+    /**
+     * Format field differences as HTML with tabbed interface
+     */
+    public function formatFieldDiffsAsHtml(array $fieldDiffs): string
+    {
+        if (empty($fieldDiffs)) {
+            return '<p class="text-gray-500">No differences found.</p>';
+        }
+
+        $html = '<div class="field-diffs">';
+        
+        // Create tabs for each field
+        $html .= '<div class="border-b border-gray-200">';
+        $html .= '<nav class="-mb-px flex space-x-8">';
+        
+        $isFirst = true;
+        foreach ($fieldDiffs as $fieldKey => $diff) {
+            $fieldLabel = ucwords(str_replace(['_', '-'], ' ', $fieldKey));
+            $activeClass = $isFirst ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300';
+            
+            $html .= "<button class=\"field-tab whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm {$activeClass}\" data-field=\"{$fieldKey}\">";
+            $html .= $fieldLabel;
+            $html .= '</button>';
+            
+            $isFirst = false;
+        }
+        
+        $html .= '</nav>';
+        $html .= '</div>';
+        
+        // Create content for each field
+        $isFirst = true;
+        foreach ($fieldDiffs as $fieldKey => $diff) {
+            $displayClass = $isFirst ? 'block' : 'hidden';
+            
+            $html .= "<div class=\"field-content {$displayClass}\" data-field=\"{$fieldKey}\">";
+            $html .= '<div class="mt-4">';
+            $html .= $this->formatDiffAsHtml($diff['diff']);
+            $html .= '</div>';
+            $html .= '</div>';
+            
+            $isFirst = false;
+        }
+        
+        $html .= '</div>';
+        
+        // Add JavaScript for tab switching
+        $html .= '<script>';
+        $html .= 'document.addEventListener("DOMContentLoaded", function() {';
+        $html .= '  const tabs = document.querySelectorAll(".field-tab");';
+        $html .= '  const contents = document.querySelectorAll(".field-content");';
+        $html .= '  ';
+        $html .= '  tabs.forEach(tab => {';
+        $html .= '    tab.addEventListener("click", function() {';
+        $html .= '      const fieldKey = this.dataset.field;';
+        $html .= '      ';
+        $html .= '      // Update tab styles';
+        $html .= '      tabs.forEach(t => {';
+        $html .= '        t.classList.remove("border-blue-500", "text-blue-600");';
+        $html .= '        t.classList.add("border-transparent", "text-gray-500");';
+        $html .= '      });';
+        $html .= '      this.classList.remove("border-transparent", "text-gray-500");';
+        $html .= '      this.classList.add("border-blue-500", "text-blue-600");';
+        $html .= '      ';
+        $html .= '      // Update content visibility';
+        $html .= '      contents.forEach(content => {';
+        $html .= '        content.classList.add("hidden");';
+        $html .= '      });';
+        $html .= '      document.querySelector(`[data-field="${fieldKey}"].field-content`).classList.remove("hidden");';
+        $html .= '    });';
+        $html .= '  });';
+        $html .= '});';
+        $html .= '</script>';
+        
+        return $html;
+    }
 }

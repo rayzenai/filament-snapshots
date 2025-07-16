@@ -57,47 +57,61 @@
                             </div>
                         </div>
                         
-                        <div class="mt-4 grid grid-cols-2 gap-4">
-                            @if($snapshot->html)
-                                <div>
-                                    <p class="text-xs font-medium text-gray-600 mb-2 flex items-center space-x-1">
-                                        <x-heroicon-o-code-bracket class="w-3 h-3" />
-                                        <span>HTML Content</span>
-                                    </p>
-                                    <div class="bg-gray-50 border rounded p-3 h-20 overflow-y-auto">
-                                        <pre class="text-xs text-gray-700 whitespace-pre-wrap">{{ strip_tags($snapshot->html) }}</pre>
-                                    </div>
-                                </div>
-                            @else
-                                <div>
-                                    <p class="text-xs font-medium text-gray-400 mb-2 flex items-center space-x-1">
-                                        <x-heroicon-o-code-bracket class="w-3 h-3" />
-                                        <span>HTML Content</span>
-                                    </p>
-                                    <div class="bg-gray-100 border rounded p-3 h-20 flex items-center justify-center">
-                                        <span class="text-xs text-gray-400">No content</span>
-                                    </div>
-                                </div>
-                            @endif
+                        <div class="mt-4">
+                            @php
+                                $fieldData = $snapshot->field_data ?? [];
+                                $hasFieldData = !empty($fieldData);
+                                $fieldKeys = $hasFieldData ? array_keys($fieldData) : [];
+                                $gridCols = count($fieldKeys) > 2 ? 'grid-cols-3' : 'grid-cols-2';
+                            @endphp
                             
-                            @if($snapshot->css)
-                                <div>
-                                    <p class="text-xs font-medium text-gray-600 mb-2 flex items-center space-x-1">
-                                        <x-heroicon-o-paint-brush class="w-3 h-3" />
-                                        <span>CSS Styles</span>
-                                    </p>
-                                    <div class="bg-gray-50 border rounded p-3 h-20 overflow-y-auto">
-                                        <pre class="text-xs text-gray-700 whitespace-pre-wrap">{{ $snapshot->css }}</pre>
-                                    </div>
+                            @if($hasFieldData)
+                                <div class="grid {{ $gridCols }} gap-4">
+                                    @foreach($fieldKeys as $fieldKey)
+                                        @php
+                                            $fieldValue = $fieldData[$fieldKey] ?? '';
+                                            $fieldLabel = ucwords(str_replace(['_', '-'], ' ', $fieldKey));
+                                            $icon = match($fieldKey) {
+                                                'html', 'content', 'body' => 'heroicon-o-code-bracket',
+                                                'css', 'styles' => 'heroicon-o-paint-brush',
+                                                'title', 'heading' => 'heroicon-o-document-text',
+                                                'meta_description', 'excerpt' => 'heroicon-o-document',
+                                                default => 'heroicon-o-document-text'
+                                            };
+                                        @endphp
+                                        
+                                        @if(!empty($fieldValue))
+                                            <div>
+                                                <p class="text-xs font-medium text-gray-600 mb-2 flex items-center space-x-1">
+                                                    <x-dynamic-component :component="$icon" class="w-3 h-3" />
+                                                    <span>{{ $fieldLabel }}</span>
+                                                </p>
+                                                <div class="bg-gray-50 border rounded p-3 h-20 overflow-y-auto">
+                                                    <pre class="text-xs text-gray-700 whitespace-pre-wrap">{{ 
+                                                        in_array($fieldKey, ['html', 'content', 'body']) 
+                                                            ? strip_tags($fieldValue) 
+                                                            : $fieldValue 
+                                                    }}</pre>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div>
+                                                <p class="text-xs font-medium text-gray-400 mb-2 flex items-center space-x-1">
+                                                    <x-dynamic-component :component="$icon" class="w-3 h-3" />
+                                                    <span>{{ $fieldLabel }}</span>
+                                                </p>
+                                                <div class="bg-gray-100 border rounded p-3 h-20 flex items-center justify-center">
+                                                    <span class="text-xs text-gray-400">No content</span>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
                                 </div>
                             @else
-                                <div>
-                                    <p class="text-xs font-medium text-gray-400 mb-2 flex items-center space-x-1">
-                                        <x-heroicon-o-paint-brush class="w-3 h-3" />
-                                        <span>CSS Styles</span>
-                                    </p>
-                                    <div class="bg-gray-100 border rounded p-3 h-20 flex items-center justify-center">
-                                        <span class="text-xs text-gray-400">No styles</span>
+                                <div class="text-center py-8">
+                                    <div class="text-gray-400">
+                                        <x-heroicon-o-document class="w-8 h-8 mx-auto mb-2" />
+                                        <p class="text-sm">No field data available</p>
                                     </div>
                                 </div>
                             @endif
