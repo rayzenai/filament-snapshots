@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CmsMax\FilamentSnapshots\Services;
+namespace Rayzenai\FilamentSnapshots\Services;
 
-use CmsMax\FilamentSnapshots\Models\ContentSnapshot;
+use Rayzenai\FilamentSnapshots\Models\ContentSnapshot;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -43,7 +43,7 @@ class SnapshotService
         return $snapshot;
     }
 
-    public function getSnapshots(Model $model, int $limit = null): Collection
+    public function getSnapshots(Model $model, ?int $limit = null): Collection
     {
         $limit = $limit ?? config('filament-snapshots.ui.snapshots_per_page', 20);
         

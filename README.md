@@ -40,7 +40,7 @@ php artisan vendor:publish --tag="filament-snapshots-config"
 Add the `HasContentSnapshots` trait to any model that has HTML/CSS content:
 
 ```php
-use CmsMax\FilamentSnapshots\Concerns\HasContentSnapshots;
+use Rayzenai\FilamentSnapshots\Concerns\HasContentSnapshots;
 
 class Page extends Model
 {
@@ -55,7 +55,7 @@ class Page extends Model
 Add the snapshots action to your Filament resource header actions:
 
 ```php
-use CmsMax\FilamentSnapshots\Actions\ManageContentSnapshotsAction;
+use Rayzenai\FilamentSnapshots\Actions\ManageContentSnapshotsAction;
 
 class PageResource extends Resource
 {
@@ -211,9 +211,9 @@ Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## Credits
 
-- [CMS Max](https://cmsmax.com)
+- [Rayzenai](https://rayzenai.com)
 - [All Contributors](../../contributors)
 
 ## Support
 
-For support, please contact us at [info@cmsmax.com](mailto:info@cmsmax.com) or create an issue on GitHub.
+For support, please contact us at [info@rayzenai.com](mailto:info@rayzenai.com) or create an issue on GitHub.

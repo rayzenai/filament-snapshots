@@ -1,6 +1,6 @@
-# Installation Guide for Existing CMS Max V3 App
+# Installation Guide for Existing Rayzenai App
 
-This guide shows how to integrate the `filament-snapshots` package into your existing CMS Max V3 application.
+This guide shows how to integrate the `filament-snapshots` package into your existing Rayzenai application.
 
 ## Steps
 
@@ -42,7 +42,7 @@ Replace the existing trait usage with the package trait:
 use App\Models\Concerns\HasContentSnapshots;
 
 // With:
-use CmsMax\FilamentSnapshots\Concerns\HasContentSnapshots;
+use Rayzenai\FilamentSnapshots\Concerns\HasContentSnapshots;
 ```
 
 ### 4. Update Filament Actions
@@ -55,7 +55,7 @@ Replace the existing action with the package action:
 use App\Filament\Actions\ManageContentSnapshotsAction;
 
 // With:
-use CmsMax\FilamentSnapshots\Actions\ManageContentSnapshotsAction;
+use Rayzenai\FilamentSnapshots\Actions\ManageContentSnapshotsAction;
 ```
 
 ### 5. Remove Old Files

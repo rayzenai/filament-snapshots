@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace CmsMax\FilamentSnapshots\Concerns;
+namespace Rayzenai\FilamentSnapshots\Concerns;
 
-use CmsMax\FilamentSnapshots\Models\ContentSnapshot;
-use CmsMax\FilamentSnapshots\Services\SnapshotService;
+use Rayzenai\FilamentSnapshots\Models\ContentSnapshot;
+use Rayzenai\FilamentSnapshots\Services\SnapshotService;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Collection;
 
@@ -46,7 +46,7 @@ trait HasContentSnapshots
         return app(SnapshotService::class)->createSnapshot($this, $heading, $metadata);
     }
 
-    public function getSnapshots(int $limit = null): Collection
+    public function getSnapshots(?int $limit = null): Collection
     {
         return app(SnapshotService::class)->getSnapshots($this, $limit);
     }

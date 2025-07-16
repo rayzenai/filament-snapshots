@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace CmsMax\FilamentSnapshots\Livewire;
+namespace Rayzenai\FilamentSnapshots\Livewire;
 
-use CmsMax\FilamentSnapshots\Models\ContentSnapshot;
-use CmsMax\FilamentSnapshots\Services\SnapshotService;
+use Rayzenai\FilamentSnapshots\Models\ContentSnapshot;
+use Rayzenai\FilamentSnapshots\Services\SnapshotService;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;

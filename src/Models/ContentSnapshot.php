@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CmsMax\FilamentSnapshots\Models;
+namespace Rayzenai\FilamentSnapshots\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;

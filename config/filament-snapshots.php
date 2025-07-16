@@ -15,7 +15,7 @@ return [
     'table_name' => 'content_snapshots',
 
     'models' => [
-        'content_snapshot' => \CmsMax\FilamentSnapshots\Models\ContentSnapshot::class,
+        'content_snapshot' => \Rayzenai\FilamentSnapshots\Models\ContentSnapshot::class,
     ],
 
     'auto_snapshot' => [

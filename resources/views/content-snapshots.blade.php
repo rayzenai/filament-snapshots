@@ -52,8 +52,8 @@
                                 @endif
                             </div>
                             <div class="flex items-center space-x-2">
-                                {{ (\CmsMax\FilamentSnapshots\Actions\ManageContentSnapshotsAction::restoreSnapshotAction())(['snapshot' => $snapshot]) }}
-                                {{ (\CmsMax\FilamentSnapshots\Actions\ManageContentSnapshotsAction::deleteSnapshotAction())(['snapshot' => $snapshot]) }}
+                                {{ (\Rayzenai\FilamentSnapshots\Actions\ManageContentSnapshotsAction::restoreSnapshotAction())(['snapshot' => $snapshot]) }}
+                                {{ (\Rayzenai\FilamentSnapshots\Actions\ManageContentSnapshotsAction::deleteSnapshotAction())(['snapshot' => $snapshot]) }}
                             </div>
                         </div>
                         

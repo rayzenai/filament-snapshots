@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace CmsMax\FilamentSnapshots\Actions;
+namespace Rayzenai\FilamentSnapshots\Actions;
 
-use CmsMax\FilamentSnapshots\Models\ContentSnapshot;
-use CmsMax\FilamentSnapshots\Services\SnapshotService;
+use Rayzenai\FilamentSnapshots\Models\ContentSnapshot;
+use Rayzenai\FilamentSnapshots\Services\SnapshotService;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\TextInput;

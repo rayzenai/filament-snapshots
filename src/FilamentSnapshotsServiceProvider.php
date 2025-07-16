@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CmsMax\FilamentSnapshots;
+namespace Rayzenai\FilamentSnapshots;
 
-use CmsMax\FilamentSnapshots\Models\ContentSnapshot;
+use Rayzenai\FilamentSnapshots\Models\ContentSnapshot;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
@@ -74,6 +74,6 @@ class FilamentSnapshotsServiceProvider extends ServiceProvider
 
     protected function registerLivewireComponents(): void
     {
-        Livewire::component('filament-snapshots::content-snapshots-modal', \CmsMax\FilamentSnapshots\Livewire\ContentSnapshotsModal::class);
+        Livewire::component('filament-snapshots::content-snapshots-modal', \Rayzenai\FilamentSnapshots\Livewire\ContentSnapshotsModal::class);
     }
 }

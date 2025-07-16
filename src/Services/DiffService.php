@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CmsMax\FilamentSnapshots\Services;
+namespace Rayzenai\FilamentSnapshots\Services;
 
 class DiffService
 {
