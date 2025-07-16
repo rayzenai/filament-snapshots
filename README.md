@@ -17,7 +17,7 @@ A Laravel package that provides content snapshots with restore functionality for
 Install the package via Composer:
 
 ```bash
-composer require cmsmax/filament-snapshots
+composer require rayzenai/filament-snapshots
 ```
 
 Publish and run the migrations:
@@ -45,7 +45,7 @@ use CmsMax\FilamentSnapshots\Concerns\HasContentSnapshots;
 class Page extends Model
 {
     use HasContentSnapshots;
-    
+
     // Your model code...
 }
 ```
@@ -74,11 +74,14 @@ class PageResource extends Resource
 ### 3. Using Snapshots
 
 #### Automatic Snapshots
+
 Snapshots are automatically created:
+
 - Before updating content (when `html` or `css` fields change)
 - Before deleting a model
 
 #### Manual Snapshots
+
 Create manual snapshots programmatically:
 
 ```php
@@ -87,6 +90,7 @@ $snapshot = $page->createSnapshot('Before major redesign');
 ```
 
 #### Restore from Snapshot
+
 Restore content from a snapshot:
 
 ```php
@@ -95,6 +99,7 @@ $snapshot->restore();
 ```
 
 #### Get Snapshots
+
 Get all snapshots for a model:
 
 ```php
@@ -108,29 +113,29 @@ The package comes with a configuration file that allows you to customize various
 ```php
 return [
     'table_name' => 'content_snapshots',
-    
+
     'auto_snapshot' => [
         'enabled' => true,
         'on_update' => true,
         'on_delete' => true,
     ],
-    
+
     'snapshot_limits' => [
         'max_per_model' => 50,
         'cleanup_after_days' => 30,
     ],
-    
+
     'ui' => [
         'modal_width' => 'seven_extra_large',
         'snapshots_per_page' => 20,
         'diff_height' => 'h-64',
     ],
-    
+
     'content_columns' => [
         'html' => 'html',
         'css' => 'css',
     ],
-    
+
     'metadata' => [
         'track_user' => true,
         'track_ip' => false,
@@ -142,6 +147,7 @@ return [
 ## Customization
 
 ### Custom Column Names
+
 If your model uses different column names for HTML/CSS content:
 
 ```php
@@ -153,6 +159,7 @@ If your model uses different column names for HTML/CSS content:
 ```
 
 ### Custom Views
+
 Publish the views to customize the UI:
 
 ```bash

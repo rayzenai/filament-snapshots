@@ -5,23 +5,25 @@ This guide shows how to integrate the `filament-snapshots` package into your exi
 ## Steps
 
 ### 1. Add Package to Main Composer
+
 Add the package to your main `composer.json`:
 
 ```json
 {
-    "repositories": [
-        {
-            "type": "path",
-            "url": "./packages/filament-snapshots"
-        }
-    ],
-    "require": {
-        "cmsmax/filament-snapshots": "*"
+  "repositories": [
+    {
+      "type": "path",
+      "url": "./packages/filament-snapshots"
     }
+  ],
+  "require": {
+    "rayzenai/filament-snapshots": "*"
+  }
 }
 ```
 
 ### 2. Update AppServiceProvider
+
 Remove the ContentSnapshot from the morph map since it's now handled by the package:
 
 ```php
@@ -31,6 +33,7 @@ Remove the ContentSnapshot from the morph map since it's now handled by the pack
 ```
 
 ### 3. Update Models
+
 Replace the existing trait usage with the package trait:
 
 ```php
@@ -43,6 +46,7 @@ use CmsMax\FilamentSnapshots\Concerns\HasContentSnapshots;
 ```
 
 ### 4. Update Filament Actions
+
 Replace the existing action with the package action:
 
 ```php
@@ -55,6 +59,7 @@ use CmsMax\FilamentSnapshots\Actions\ManageContentSnapshotsAction;
 ```
 
 ### 5. Remove Old Files
+
 Delete the old files since they're now in the package:
 
 ```bash
@@ -85,6 +90,7 @@ rm resources/views/filament/actions/livewire-wrapper.blade.php
 ```
 
 ### 6. Install Package
+
 Run composer install to install the package:
 
 ```bash
@@ -92,6 +98,7 @@ composer install
 ```
 
 ### 7. Run Migrations (if needed)
+
 If you haven't run the content_snapshots migration yet:
 
 ```bash
@@ -99,6 +106,7 @@ php artisan migrate
 ```
 
 ### 8. Clear Cache
+
 Clear all caches:
 
 ```bash

@@ -1,5 +1,5 @@
 {
-    "name": "cmsmax/filament-snapshots",
+    "name": "rayzenai/filament-snapshots",
     "description": "A Laravel package for managing content snapshots with restore functionality in Filament",
     "type": "library",
     "license": "MIT",
@@ -13,8 +13,8 @@
     ],
     "authors": [
         {
-            "name": "CMS Max",
-            "email": "info@cmsmax.com"
+            "name": "Kiran Timsina",
+            "email": "timsinakiran@gmail.com"
         }
     ],
     "require": {
