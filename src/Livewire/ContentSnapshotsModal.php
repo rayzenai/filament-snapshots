@@ -9,7 +9,7 @@ use Rayzenai\FilamentSnapshots\Services\SnapshotService;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Component;
@@ -30,9 +30,9 @@ class ContentSnapshotsModal extends Component implements HasForms
         $this->loadSnapshots();
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 TextInput::make('heading')
                     ->required()
